@@ -35,7 +35,7 @@ public class AuthController {
     private JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody AuthRequestDTO loginRequest) {
+    public ResponseEntity<?> authenticateUser(@jakarta.validation.Valid @RequestBody AuthRequestDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -53,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDTO registerRequest) {
+    public ResponseEntity<?> registerUser(@jakarta.validation.Valid @RequestBody RegisterRequestDTO registerRequest) {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             return new ResponseEntity<>("Email ya está en uso!", HttpStatus.BAD_REQUEST);
         }
@@ -62,12 +62,8 @@ public class AuthController {
         user.setName(registerRequest.getName());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        
-        if (registerRequest.getRole() != null && registerRequest.getRole().equalsIgnoreCase("ADMIN")) {
-            user.setRole(Role.ROLE_ADMIN);
-        } else {
-            user.setRole(Role.ROLE_CLIENT);
-        }
+        // Forzar siempre ROLE_CLIENT para evitar escalación de privilegios
+        user.setRole(Role.ROLE_CLIENT);
 
         userRepository.save(user); // Guarda automáticamente en la base de datos
 

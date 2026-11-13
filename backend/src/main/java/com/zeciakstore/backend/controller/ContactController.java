@@ -22,7 +22,7 @@ public class ContactController {
     private ContactService contactService;
 
     @PostMapping
-    public ResponseEntity<ContactMessage> sendContactMessage(@RequestBody ContactMessage message) {
+    public ResponseEntity<ContactMessage> sendContactMessage(@jakarta.validation.Valid @RequestBody ContactMessage message) {
         ContactMessage saved = contactService.saveMessage(message);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
