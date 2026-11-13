@@ -43,7 +43,7 @@
         <ng-template #loggedInActions>
           <div class="user-badge" *ngIf="(currentUser$ | async) as user">
             <span class="user-name"><i class="fa-solid fa-user-check"></i> {{ user.name }}</span>
-            <button (click)="logout()" class="btn btn-accent btn-sm" title="Cerrar Sesión">
+            <button (click)="logout()" class="btn btn-accent btn-sm btn-logout" title="Cerrar Sesión">
               <i class="fa-solid fa-arrow-right-from-bracket"></i> Salir
             </button>
           </div>

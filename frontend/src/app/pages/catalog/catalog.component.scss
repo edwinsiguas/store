@@ -382,10 +382,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
       padding-top: 14px;
       border-top: 1px solid #f1f5f9;
 
       .price-data {
+        white-space: nowrap;
+        flex-shrink: 0;
+
         .symbol {
           font-size: 0.9rem;
           font-weight: 700;
@@ -403,9 +408,11 @@
         background: #0081a7;
         color: #ffffff;
         border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 0.9rem;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-radius: 10px;
         font-weight: 700;
         cursor: pointer;
         display: inline-flex;

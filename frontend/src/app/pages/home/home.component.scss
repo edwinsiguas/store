@@ -312,12 +312,23 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
         padding-top: 12px;
         border-top: 1px solid #edf2f7;
 
         .price-box {
+          white-space: nowrap;
+          flex-shrink: 0;
+
           .currency { font-size: 0.85rem; font-weight: 600; color: #0a2540; margin-right: 2px; }
-          .amount { font-size: 1.25rem; font-weight: 800; color: #0081a7; }
+          .amount { font-size: 1.15rem; font-weight: 800; color: #0081a7; }
+        }
+
+        button,
+        .btn {
+          flex-shrink: 0;
+          white-space: nowrap;
         }
       }
     }

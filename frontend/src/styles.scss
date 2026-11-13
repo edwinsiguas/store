@@ -55,6 +55,13 @@ a {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: $shadow-sm;
 
+    &-sm {
+        padding: 0.45rem 0.95rem;
+        font-size: 0.82rem;
+        border-radius: 10px;
+        white-space: nowrap;
+    }
+
     &-primary {
         background: linear-gradient(135deg, $color-primary, $color-primary-light);
         color: $color-white;
