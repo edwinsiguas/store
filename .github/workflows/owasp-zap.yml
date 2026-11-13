@@ -1,0 +1,165 @@
+name: OWASP ZAP Security Audit
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  zap-security-audit:
+    name: OWASP ZAP Baseline Scan (Backend & Frontend)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: zeciakstore_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_test_password_123
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # ==========================================
+      # 1. SETUP & BUILD BACKEND (Spring Boot)
+      # ==========================================
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build Spring Boot Backend
+        working-directory: backend
+        run: mvn clean package -DskipTests
+
+      - name: Start Spring Boot Backend in Background
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/zeciakstore_db
+          DB_USERNAME: postgres
+          DB_PASSWORD: ci_test_password_123
+          PORT: 8080
+        run: |
+          java -jar backend/target/*.jar > backend.log 2>&1 &
+          echo $! > backend.pid
+
+      - name: Wait for Backend API Readiness
+        run: |
+          echo "Verificando disponibilidad de la API Backend en http://localhost:8080/api/products..."
+          timeout 120s bash -c 'until curl -sf http://localhost:8080/api/products > /dev/null; do
+            echo "Esperando que el backend esté listo..."
+            sleep 3
+          done' || { echo "ERROR: El backend no inició correctamente. Logs:"; cat backend.log; exit 1; }
+          echo "¡Backend en línea y respondiendo HTTP 200!"
+
+      # ==========================================
+      # 2. SETUP & BUILD FRONTEND (Angular)
+      # ==========================================
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install & Build Angular Frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Serve Frontend in Background
+        run: |
+          npx --yes http-server frontend/dist/frontend/browser -p 4200 --cors > frontend.log 2>&1 &
+          echo $! > frontend.pid
+
+      - name: Wait for Frontend Readiness
+        run: |
+          echo "Verificando disponibilidad del Frontend en http://localhost:4200..."
+          timeout 60s bash -c 'until curl -sf http://localhost:4200 > /dev/null; do
+            echo "Esperando que el frontend esté listo..."
+            sleep 2
+          done' || { echo "ERROR: El frontend no inició correctamente. Logs:"; cat frontend.log; exit 1; }
+          echo "¡Frontend en línea y respondiendo HTTP 200!"
+
+      # ==========================================
+      # 3. OWASP ZAP SCAN: BACKEND API
+      # ==========================================
+      - name: Run OWASP ZAP Baseline Scan (Backend API)
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'http://localhost:8080/api/products'
+          fail_action: false
+          artifact_name: 'zap-backend-report'
+          issue_title: 'OWASP ZAP - Alertas de Seguridad en Backend API'
+
+      - name: Archive Backend ZAP Report Files
+        if: always()
+        run: |
+          mkdir -p zap-backend-report
+          cp -f report_html.html report_md.md report_json.json zap-backend-report/ 2>/dev/null || true
+          rm -f report_html.html report_md.md report_json.json 2>/dev/null || true
+
+      - name: Upload Backend ZAP Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-backend-report
+          path: zap-backend-report/
+          if-no-files-found: warn
+
+      # ==========================================
+      # 4. OWASP ZAP SCAN: FRONTEND WEB
+      # ==========================================
+      - name: Run OWASP ZAP Baseline Scan (Frontend SPA)
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'http://localhost:4200'
+          fail_action: false
+          artifact_name: 'zap-frontend-report'
+          issue_title: 'OWASP ZAP - Alertas de Seguridad en Frontend SPA'
+
+      - name: Archive Frontend ZAP Report Files
+        if: always()
+        run: |
+          mkdir -p zap-frontend-report
+          cp -f report_html.html report_md.md report_json.json zap-frontend-report/ 2>/dev/null || true
+
+      - name: Upload Frontend ZAP Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-frontend-report
+          path: zap-frontend-report/
+          if-no-files-found: warn
+
+      # ==========================================
+      # 5. DIAGNOSTIC LOGS ON FAILURE
+      # ==========================================
+      - name: Upload Execution Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-execution-logs
+          path: |
+            backend.log
+            frontend.log
+          if-no-files-found: ignore
