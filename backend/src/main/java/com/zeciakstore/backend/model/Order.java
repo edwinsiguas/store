@@ -26,13 +26,13 @@ public class Order {
     @JsonIgnore
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "total", nullable = false)
     private BigDecimal totalAmount;
 
     @Column(nullable = false)
     private String status; // PENDING, CONFIRMED, SHIPPED, DELIVERED
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

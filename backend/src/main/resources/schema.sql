@@ -29,7 +29,8 @@ CREATE TABLE products (
     image_url VARCHAR(500),
     category VARCHAR(50) NOT NULL,
     is_featured BOOLEAN DEFAULT FALSE,
-    rating NUMERIC(3, 1) DEFAULT 5.0
+    rating NUMERIC(3, 1) DEFAULT 5.0,
+    version BIGINT DEFAULT 0
 );
 
 -- Tabla: Órdenes de Compra (Transaccional)

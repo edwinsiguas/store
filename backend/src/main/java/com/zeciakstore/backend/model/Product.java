@@ -49,6 +49,9 @@ public class Product {
     @Column
     private Double rating;
 
+    @Version
+    private Long version;
+
     public Product(Long id, String name, String description, BigDecimal price, Integer stock, String imageUrl) {
         this.id = id;
         this.name = name;

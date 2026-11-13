@@ -31,6 +31,6 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private BigDecimal subtotal;
 }

@@ -2,6 +2,7 @@ package com.zeciakstore.backend.service;
 
 import com.zeciakstore.backend.dto.OrderItemRequestDTO;
 import com.zeciakstore.backend.dto.OrderRequestDTO;
+import com.zeciakstore.backend.dto.OrderResponseDTO;
 import com.zeciakstore.backend.model.Order;
 import com.zeciakstore.backend.model.Product;
 import com.zeciakstore.backend.model.Role;
@@ -59,18 +60,24 @@ public class OrderServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> {
+            Order orderToSave = invocation.getArgument(0);
+            orderToSave.setId(100L);
+            return orderToSave;
+        });
 
         // Act
-        Order createdOrder = orderService.createOrder(1L, requestDTO);
+        OrderResponseDTO createdOrder = orderService.createOrder(1L, requestDTO);
 
         // Assert
         assertNotNull(createdOrder);
         assertEquals("PENDING", createdOrder.getStatus());
-        assertEquals(new BigDecimal("100.00"), createdOrder.getTotalAmount()); // 2 * 50.00
-        
+        assertEquals(new BigDecimal("100.00"), createdOrder.getTotal()); // 2 * 50.00
+        assertEquals(1, createdOrder.getItems().size());
+        assertEquals("Bikini", createdOrder.getItems().get(0).getName());
+
         // Verificamos que el stock se haya reducido
-        assertEquals(8, product.getStock()); 
+        assertEquals(8, product.getStock());
         verify(productRepository, times(1)).save(product);
         verify(orderRepository, times(1)).save(any(Order.class));
     }
@@ -92,8 +99,8 @@ public class OrderServiceTest {
             orderService.createOrder(1L, requestDTO);
         });
 
-        assertEquals("Not enough stock for product: Bikini", exception.getMessage());
-        
+        assertTrue(exception.getMessage().contains("Stock insuficiente"));
+
         // Verificamos que no se intentó guardar la orden
         verify(orderRepository, never()).save(any(Order.class));
     }
