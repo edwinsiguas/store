@@ -11,5 +11,5 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('ZeciaK Store');
+  readonly title = signal('ZeciaK Store');
 }
