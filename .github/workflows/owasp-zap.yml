@@ -7,13 +7,41 @@ on:
       - master
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   issues: write
 
 jobs:
-  zap-security-audit:
-    name: OWASP ZAP Baseline Scan (Backend & Frontend)
+  # ========================================================
+  # JOB 1: BACKEND UNIT TESTS (Rápido: feedback en < 1 min)
+  # ========================================================
+  backend-tests:
+    name: Backend Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Unit Tests
+        working-directory: backend
+        run: mvn test -B
+
+  # ========================================================
+  # JOB 2: OWASP ZAP SCAN - BACKEND API (En paralelo)
+  # ========================================================
+  zap-backend:
+    name: OWASP ZAP - Backend API
     runs-on: ubuntu-latest
 
     services:
@@ -35,9 +63,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ==========================================
-      # 1. SETUP & BUILD BACKEND (Spring Boot)
-      # ==========================================
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -47,7 +72,7 @@ jobs:
 
       - name: Build Spring Boot Backend
         working-directory: backend
-        run: mvn clean package -DskipTests
+        run: mvn package -DskipTests -B -T 1C
 
       - name: Start Spring Boot Backend in Background
         env:
@@ -63,14 +88,51 @@ jobs:
         run: |
           echo "Verificando disponibilidad de la API Backend en http://localhost:8080/api/products..."
           timeout 120s bash -c 'until curl -sf http://localhost:8080/api/products > /dev/null; do
-            echo "Esperando que el backend esté listo..."
+            echo "Esperando que el backend responda..."
             sleep 3
           done' || { echo "ERROR: El backend no inició correctamente. Logs:"; cat backend.log; exit 1; }
           echo "¡Backend en línea y respondiendo HTTP 200!"
 
-      # ==========================================
-      # 2. SETUP & BUILD FRONTEND (Angular)
-      # ==========================================
+      - name: Prepare Report Directory & Permissions
+        run: |
+          mkdir -p zap-backend-report
+          chmod -R a+w zap-backend-report $(pwd)
+
+      - name: Run OWASP ZAP Baseline Scan (Docker)
+        run: |
+          docker run --network="host" -v $(pwd)/zap-backend-report:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+            -t http://localhost:8080/api/products \
+            -r report_html.html \
+            -w report_md.md \
+            -J report_json.json \
+            -I || true
+
+      - name: Upload Backend ZAP Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-backend-report
+          path: zap-backend-report/
+          if-no-files-found: warn
+
+      - name: Upload Backend Logs on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-execution-log
+          path: backend.log
+          if-no-files-found: ignore
+
+  # ========================================================
+  # JOB 3: OWASP ZAP SCAN - FRONTEND SPA (En paralelo)
+  # ========================================================
+  zap-frontend:
+    name: OWASP ZAP - Frontend SPA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
@@ -93,55 +155,24 @@ jobs:
         run: |
           echo "Verificando disponibilidad del Frontend en http://localhost:4200..."
           timeout 60s bash -c 'until curl -sf http://localhost:4200 > /dev/null; do
-            echo "Esperando que el frontend esté listo..."
+            echo "Esperando que el frontend responda..."
             sleep 2
           done' || { echo "ERROR: El frontend no inició correctamente. Logs:"; cat frontend.log; exit 1; }
           echo "¡Frontend en línea y respondiendo HTTP 200!"
 
-      # ==========================================
-      # 3. OWASP ZAP SCAN: BACKEND API
-      # ==========================================
-      - name: Run OWASP ZAP Baseline Scan (Backend API)
-        uses: zaproxy/action-baseline@v0.12.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://localhost:8080/api/products'
-          fail_action: false
-          artifact_name: 'zap-backend-report'
-          issue_title: 'OWASP ZAP - Alertas de Seguridad en Backend API'
-
-      - name: Archive Backend ZAP Report Files
-        if: always()
-        run: |
-          mkdir -p zap-backend-report
-          cp -f report_html.html report_md.md report_json.json zap-backend-report/ 2>/dev/null || true
-          rm -f report_html.html report_md.md report_json.json 2>/dev/null || true
-
-      - name: Upload Backend ZAP Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-backend-report
-          path: zap-backend-report/
-          if-no-files-found: warn
-
-      # ==========================================
-      # 4. OWASP ZAP SCAN: FRONTEND WEB
-      # ==========================================
-      - name: Run OWASP ZAP Baseline Scan (Frontend SPA)
-        uses: zaproxy/action-baseline@v0.12.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://localhost:4200'
-          fail_action: false
-          artifact_name: 'zap-frontend-report'
-          issue_title: 'OWASP ZAP - Alertas de Seguridad en Frontend SPA'
-
-      - name: Archive Frontend ZAP Report Files
-        if: always()
+      - name: Prepare Report Directory & Permissions
         run: |
           mkdir -p zap-frontend-report
-          cp -f report_html.html report_md.md report_json.json zap-frontend-report/ 2>/dev/null || true
+          chmod -R a+w zap-frontend-report $(pwd)
+
+      - name: Run OWASP ZAP Baseline Scan (Docker)
+        run: |
+          docker run --network="host" -v $(pwd)/zap-frontend-report:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+            -t http://localhost:4200 \
+            -r report_html.html \
+            -w report_md.md \
+            -J report_json.json \
+            -I || true
 
       - name: Upload Frontend ZAP Artifact
         if: always()
@@ -151,15 +182,10 @@ jobs:
           path: zap-frontend-report/
           if-no-files-found: warn
 
-      # ==========================================
-      # 5. DIAGNOSTIC LOGS ON FAILURE
-      # ==========================================
-      - name: Upload Execution Logs on Failure
+      - name: Upload Frontend Logs on Failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: server-execution-logs
-          path: |
-            backend.log
-            frontend.log
+          name: frontend-execution-log
+          path: frontend.log
           if-no-files-found: ignore
