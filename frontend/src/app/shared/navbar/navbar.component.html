@@ -1,0 +1,54 @@
+<nav class="navbar" [class.navbar-scrolled]="isScrolled">
+  <div class="container navbar-container">
+    <a routerLink="/" class="navbar-brand">
+      <div class="brand-symbol">
+        <i class="fa-solid fa-sun brand-icon"></i>
+      </div>
+      <div class="brand-text-group">
+        <span class="brand-text">ZeciaK</span>
+        <span class="brand-subtext">Store • Punta Sal</span>
+      </div>
+    </a>
+
+    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+      <i class="fa-solid" [ngClass]="isMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+    </button>
+
+    <div class="navbar-menu" [class.is-active]="isMenuOpen">
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" (click)="isMenuOpen = false">Inicio</a>
+        <a routerLink="/catalog" routerLinkActive="active" class="nav-link" (click)="isMenuOpen = false">Catálogo</a>
+        <a routerLink="/tourism" routerLinkActive="active" class="nav-link" (click)="isMenuOpen = false">Destinos</a>
+        <a routerLink="/nosotros" routerLinkActive="active" class="nav-link" (click)="isMenuOpen = false">Nosotros</a>
+        <a routerLink="/contacto" routerLinkActive="active" class="nav-link" (click)="isMenuOpen = false">Contacto</a>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Icono de Carrito con Contador Reactivo -->
+        <a routerLink="/cart" class="nav-link cart-link" (click)="isMenuOpen = false" title="Ver Carrito de Compras">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-badge" *ngIf="(cartCount$ | async) as count">{{ count }}</span>
+        </a>
+
+        <!-- Botones de Usuario / Autenticación JWT -->
+        <ng-container *ngIf="!(currentUser$ | async); else loggedInActions">
+          <a routerLink="/login" class="btn btn-outline-nav btn-sm" (click)="isMenuOpen = false">
+            <i class="fa-regular fa-user"></i> Ingresar
+          </a>
+          <a routerLink="/register" class="btn btn-primary btn-sm" (click)="isMenuOpen = false">
+            Registro
+          </a>
+        </ng-container>
+        
+        <ng-template #loggedInActions>
+          <div class="user-badge" *ngIf="(currentUser$ | async) as user">
+            <span class="user-name"><i class="fa-solid fa-user-check"></i> {{ user.name }}</span>
+            <button (click)="logout()" class="btn btn-accent btn-sm" title="Cerrar Sesión">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Salir
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

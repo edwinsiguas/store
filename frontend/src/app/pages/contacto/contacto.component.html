@@ -1,0 +1,195 @@
+<div class="contact-page">
+  <!-- Hero Section -->
+  <header class="contact-hero">
+    <div class="container text-center">
+      <span class="subheading"><i class="fa-solid fa-headset"></i> Atención Continua 24/7</span>
+      <h1>Contacto & Asistencia ZeciaK</h1>
+      <p>¿Tienes dudas sobre nuestras prendas, pedidos o necesitas recomendaciones turísticas para tu viaje a Punta Sal? Estamos para ayudarte.</p>
+    </div>
+  </header>
+
+  <div class="container contact-main-container">
+    
+    <!-- Grid Principal: Formulario + Datos de Contacto -->
+    <div class="contact-grid">
+      
+      <!-- Columna Izquierda: Formulario de Contacto -->
+      <div class="form-wrapper">
+        <div class="form-header">
+          <h2>Envíanos un Mensaje</h2>
+          <p>Completa el formulario y nuestro equipo te responderá en breve.</p>
+        </div>
+
+        <div class="alert-success" *ngIf="submittedSuccess">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <strong>¡Mensaje recibido con éxito!</strong>
+            <p>Gracias por contactarnos. Te responderemos a tu correo a la brevedad posible.</p>
+          </div>
+          <button class="close-alert" (click)="submittedSuccess = false">✕</button>
+        </div>
+
+        <div class="alert-danger" *ngIf="errorMessage">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nombre Completo *</label>
+              <div class="input-icon-box">
+                <i class="fa-regular fa-user"></i>
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  [(ngModel)]="formData.name" 
+                  placeholder="Ej. Carlos Mendoza" 
+                  required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo Electrónico *</label>
+              <div class="input-icon-box">
+                <i class="fa-regular fa-envelope"></i>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  [(ngModel)]="formData.email" 
+                  placeholder="ejemplo@correo.com" 
+                  required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Teléfono / WhatsApp</label>
+              <div class="input-icon-box">
+                <i class="fa-solid fa-phone"></i>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  name="phone" 
+                  [(ngModel)]="formData.phone" 
+                  placeholder="+51 987 654 321" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Asunto</label>
+              <div class="input-icon-box">
+                <i class="fa-solid fa-tag"></i>
+                <select id="subject" name="subject" [(ngModel)]="formData.subject">
+                  <option value="Consulta sobre Catálogo Playero">Consulta sobre Catálogo Playero</option>
+                  <option value="Estado de mi Pedido Online">Estado de mi Pedido Online</option>
+                  <option value="Tallas y Medidas de Bikinis / Shorts">Tallas y Medidas de Ropa</option>
+                  <option value="Guía Turística de Canoas de Punta Sal">Guía Turística de Canoas de Punta Sal</option>
+                  <option value="Ventas Mayoristas y Alianzas">Ventas Mayoristas y Alianzas</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Tu Mensaje o Consulta *</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              rows="5" 
+              [(ngModel)]="formData.message" 
+              placeholder="Escribe aquí tu consulta o requerimiento..." 
+              required></textarea>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-primary btn-submit" 
+            [disabled]="isSubmitting">
+            <i class="fa-solid" [ngClass]="isSubmitting ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+            {{ isSubmitting ? 'Enviando...' : 'Enviar Mensaje' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Columna Derecha: Tarjetas de Información & WhatsApp 24/7 -->
+      <div class="info-sidebar">
+        
+        <!-- Tarjeta WhatsApp Directo 24/7 -->
+        <div class="whatsapp-card">
+          <div class="wa-icon"><i class="fa-brands fa-whatsapp"></i></div>
+          <div class="wa-content">
+            <h3>¿Respuesta Inmediata?</h3>
+            <p>Escríbenos directamente a nuestro WhatsApp oficial de atención 24/7.</p>
+            <a 
+              href="https://wa.me/51951036114?text=Hola%20ZeciaK%20Store,%20deseo%20informaci%C3%B3n%20sobre%20sus%20productos%20y%20Punta%20Sal" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn-whatsapp">
+              <i class="fa-brands fa-whatsapp"></i> Chatear al +51 951 036 114
+            </a>
+          </div>
+        </div>
+
+        <!-- Tarjetas de Información -->
+        <div class="info-cards-stack">
+          <div class="info-item-card">
+            <div class="card-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="card-details">
+              <h4>Ubicación Principal</h4>
+              <p>Km 1187 Panamericana Norte, Balneario Canoas de Punta Sal, Provincia de Contralmirante Villar, Región Tumbes, Perú.</p>
+            </div>
+          </div>
+
+          <div class="info-item-card">
+            <div class="card-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="card-details">
+              <h4>Horarios de Disponibilidad</h4>
+              <p><strong>Plataforma Web & Pedidos:</strong> Disponible 24/7 (365 días)</p>
+              <p><strong>Atención Telefónica / Presencial:</strong> Lun a Dom: 8:00 AM - 9:00 PM</p>
+            </div>
+          </div>
+
+          <div class="info-item-card">
+            <div class="card-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="card-details">
+              <h4>Correo Electrónico</h4>
+              <p>soporte@zeciakstore.com</p>
+              <p>pedidos@zeciakstore.com</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Sección de Preguntas Frecuentes (FAQ) -->
+    <section class="faq-section">
+      <div class="section-header text-center">
+        <span class="eyebrow">Resolvemos tus Dudas</span>
+        <h2>Preguntas Frecuentes</h2>
+        <p>Encuentra respuestas rápidas a las consultas más comunes de nuestros visitantes.</p>
+      </div>
+
+      <div class="faq-list">
+        <div 
+          class="faq-item" 
+          *ngFor="let faq of faqs; let i = index" 
+          [class.open]="activeFaqIndex === i">
+          <button class="faq-question" (click)="toggleFaq(i)">
+            <span>{{ faq.question }}</span>
+            <i class="fa-solid" [ngClass]="activeFaqIndex === i ? 'fa-minus' : 'fa-plus'"></i>
+          </button>
+          <div class="faq-answer" *ngIf="activeFaqIndex === i">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

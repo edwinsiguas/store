@@ -1,0 +1,100 @@
+@use '../../../variables' as *;
+
+.tourism-hero {
+  background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80') center/cover no-repeat;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: $color-white;
+  padding: 2rem;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+  }
+
+  h1, p {
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  h1 {
+    font-size: 3rem;
+    color: $color-white;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    max-width: 600px;
+  }
+}
+
+.attraction-list {
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.attraction-card {
+  display: flex;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
+  
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+
+  @media (max-width: $bp-md) {
+    flex-direction: column !important;
+  }
+
+  .attraction-image {
+    flex: 1;
+    min-height: 300px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .attraction-content {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    @media (max-width: $bp-md) {
+      padding: 1.5rem;
+    }
+
+    h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .location {
+      color: $color-accent;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .description {
+      color: $color-text-muted;
+      line-height: 1.8;
+    }
+  }
+}

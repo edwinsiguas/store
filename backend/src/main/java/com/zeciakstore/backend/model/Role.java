@@ -1,0 +1,6 @@
+package com.zeciakstore.backend.model;
+
+public enum Role {
+    ROLE_CLIENT,
+    ROLE_ADMIN
+}

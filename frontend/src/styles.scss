@@ -1,0 +1,109 @@
+@use 'variables' as *;
+
+// Reset básico y configuraciones globales
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-family-base;
+    background-color: $color-background;
+    color: $color-text-dark;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-family-headings;
+    color: $color-primary;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    color: $color-primary;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: $color-accent;
+    }
+}
+
+// Botones globales mejorados
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    font-family: $font-family-headings;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: $border-radius-pill;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: $shadow-sm;
+
+    &-primary {
+        background: linear-gradient(135deg, $color-primary, $color-primary-light);
+        color: $color-white;
+
+        &:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: $shadow-hover;
+            color: $color-white;
+        }
+    }
+
+    &-accent {
+        background: linear-gradient(135deg, $color-accent, $color-accent-dark);
+        color: $color-white;
+
+        &:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(224, 122, 95, 0.3);
+            color: $color-white;
+        }
+    }
+}
+
+// Layout general
+.container {
+    width: 100%;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-right: auto;
+    margin-left: auto;
+
+    @media (min-width: $bp-sm) { max-width: 540px; }
+    @media (min-width: $bp-md) { max-width: 720px; }
+    @media (min-width: $bp-lg) { max-width: 960px; }
+    @media (min-width: $bp-xl) { max-width: 1140px; }
+}
+
+// Animaciones globales
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

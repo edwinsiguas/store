@@ -1,0 +1,149 @@
+<div class="catalog-page">
+  <!-- Header del Catálogo con identidad de Punta Sal -->
+  <header class="catalog-hero">
+    <div class="container text-center">
+      <span class="subheading"><i class="fa-solid fa-umbrella-beach"></i> Canoas de Punta Sal</span>
+      <h1>Catálogo Playero ZeciaK</h1>
+      <p>Estilo tropical de alta durabilidad, protección solar y la frescura que mereces para tus días de sol y mar.</p>
+    </div>
+  </header>
+
+  <!-- Toast flotante de confirmación de carrito -->
+  <div class="cart-toast" *ngIf="toastMessage">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ toastMessage }}</span>
+    <a routerLink="/cart" class="toast-link">Ver Carrito</a>
+  </div>
+
+  <div class="container main-catalog-container">
+    
+    <!-- Barra de Control: Filtros de Categorías, Búsqueda y Ordenamiento -->
+    <div class="catalog-controls">
+      <!-- Sistema de Filtrado Dinámico por Categorías -->
+      <div class="category-filters" role="tablist" aria-label="Filtro por Categorías">
+        <button 
+          *ngFor="let cat of categories" 
+          class="filter-pill"
+          [class.active]="activeCategory === cat"
+          (click)="setCategory(cat)">
+          <i class="fa-solid" [ngClass]="{
+            'fa-layer-group': cat === 'Todos',
+            'fa-person-dress': cat === 'Damas',
+            'fa-person': cat === 'Caballeros',
+            'fa-children': cat === 'Niños',
+            'fa-glasses': cat === 'Accesorios'
+          }"></i>
+          {{ cat }}
+        </button>
+      </div>
+
+      <!-- Barra de herramientas: Búsqueda y Ordenamiento -->
+      <div class="filter-tools">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            (ngModelChange)="onSearchChange()" 
+            placeholder="Buscar por prenda, bikini, lentes..." />
+          <button *ngIf="searchQuery" class="clear-search" (click)="searchQuery = ''; onSearchChange()">✕</button>
+        </div>
+
+        <div class="sort-box">
+          <label for="sortSelect"><i class="fa-solid fa-arrow-down-short-wide"></i> Ordenar:</label>
+          <select id="sortSelect" [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+            <option value="featured">Destacados</option>
+            <option value="price-asc">Precio: Menor a Mayor</option>
+            <option value="price-desc">Precio: Mayor a Menor</option>
+            <option value="name">Nombre: A - Z</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contador de resultados y categoría activa -->
+    <div class="results-header">
+      <span class="results-count">
+        Mostrando <strong>{{ filteredProducts.length }}</strong> productos en 
+        <span class="active-badge">{{ activeCategory }}</span>
+      </span>
+      <span class="online-247-tag">
+        <i class="fa-solid fa-bolt"></i> Compra online 24/7 disponible
+      </span>
+    </div>
+
+    <!-- Spinner de Carga -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Cargando catálogo oficial de Canoas de Punta Sal...</p>
+    </div>
+
+    <!-- Estado de Sin Resultados -->
+    <div class="empty-state" *ngIf="!isLoading && filteredProducts.length === 0">
+      <div class="empty-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+      <h3>No encontramos productos coincidentes</h3>
+      <p>Intenta ajustar el término de búsqueda o selecciona otra categoría.</p>
+      <button class="btn btn-outline" (click)="activeCategory = 'Todos'; searchQuery = ''; applyFilters()">
+        Ver todos los productos
+      </button>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div class="product-grid" *ngIf="!isLoading && filteredProducts.length > 0">
+      <div class="product-card" *ngFor="let product of filteredProducts">
+        
+        <!-- Media / Imagen local con etiqueta genérica y fallback -->
+        <div class="product-media">
+          <img 
+            [src]="product.imageUrl" 
+            [alt]="product.name"
+            (error)="onImageError($event)"
+            loading="lazy" />
+          
+          <!-- Badges sobre la imagen -->
+          <span class="category-pill">{{ product.category }}</span>
+          
+          <span class="stock-pill in-stock" *ngIf="product.stock >= 5">
+            <i class="fa-solid fa-check"></i> En Stock
+          </span>
+          <span class="stock-pill low-stock" *ngIf="product.stock < 5 && product.stock > 0">
+            ¡Últimas {{ product.stock }} unidades!
+          </span>
+          <span class="stock-pill out-of-stock" *ngIf="product.stock === 0">
+            Agotado
+          </span>
+        </div>
+
+        <!-- Contenido y detalles del producto -->
+        <div class="product-info">
+          <div class="product-rating" *ngIf="product.rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">{{ product.rating }}</span>
+          </div>
+
+          <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
+          <p class="product-desc">{{ product.description }}</p>
+
+          <div class="product-price-bar">
+            <div class="price-data">
+              <span class="symbol">S/</span>
+              <span class="val">{{ product.price | number:'1.2-2' }}</span>
+            </div>
+
+            <button 
+              class="btn-cart"
+              [class.added]="addedProductId === product.id"
+              [disabled]="product.stock === 0"
+              (click)="addToCart(product)"
+              aria-label="Añadir al carrito">
+              <i class="fa-solid" [ngClass]="addedProductId === product.id ? 'fa-check' : 'fa-cart-plus'"></i>
+              <span>{{ addedProductId === product.id ? '¡Listo!' : 'Añadir' }}</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

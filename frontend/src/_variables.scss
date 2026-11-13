@@ -1,0 +1,36 @@
+// Variables globales de diseño para ZeciaK Store (Turismo y Ropa Playera)
+
+// Paleta de Colores - Inspiración: Arena, Océano y Sol tropical
+$color-primary: #0077b6; // Azul océano profundo
+$color-primary-light: #00b4d8; // Celeste turquesa
+$color-secondary: #f4f1de; // Arena clásica cálida
+$color-accent: #e07a5f; // Coral atardecer
+$color-accent-dark: #c0634a;
+
+// Neutros
+$color-white: #ffffff;
+$color-background: #fafafa;
+$color-text-dark: #2b2d42;
+$color-text-muted: #8d99ae;
+
+// Tipografía
+$font-family-base: 'Poppins', sans-serif;
+$font-family-headings: 'Montserrat', sans-serif;
+
+// Sombras (Efecto Glassmorphism y profundidad)
+$shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+$shadow-md: 0 10px 20px rgba(0,0,0,0.1);
+$shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
+$shadow-hover: 0 15px 25px rgba(0,180,216,0.2); // Sombra con tono turquesa
+
+// Radios de Borde (Suavidad)
+$border-radius-sm: 8px;
+$border-radius-md: 16px;
+$border-radius-lg: 24px;
+$border-radius-pill: 50px;
+
+// Breakpoints (Mobile First)
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;

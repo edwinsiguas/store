@@ -1,0 +1,32 @@
+<div class="tourism-container">
+  <div class="tourism-hero">
+    <h1>Descubre Canoas de Punta Sal</h1>
+    <p>El lugar donde el desierto se encuentra con el océano. Completa tu experiencia de playa conociendo las joyas ocultas del norte peruano.</p>
+  </div>
+
+  <div class="container">
+    <div class="attraction-list" *ngIf="attractions$ | async as attractions; else loading">
+      
+      <div *ngIf="attractions.length === 0" class="no-attractions">
+        <p>Próximamente añadiremos más información turística.</p>
+      </div>
+
+      <div class="attraction-card" *ngFor="let attraction of attractions; let i = index" [class.reverse]="i % 2 !== 0">
+        <div class="attraction-image">
+          <img [src]="attraction.imageUrl || 'assets/placeholder-beach.png'" [alt]="attraction.name">
+        </div>
+        <div class="attraction-content">
+          <h3>{{ attraction.name }}</h3>
+          <p class="location">📍 {{ attraction.location }}</p>
+          <p class="description">{{ attraction.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-spinner">
+      <p>Cargando información turística...</p>
+    </div>
+  </ng-template>
+</div>

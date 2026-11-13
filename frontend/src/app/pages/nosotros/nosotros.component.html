@@ -1,0 +1,104 @@
+<div class="about-page">
+  <!-- Hero Section Nosotros -->
+  <header class="about-hero">
+    <div class="container text-center">
+      <span class="subheading"><i class="fa-solid fa-sun"></i> Nuestra Pasión & Origen</span>
+      <h1>Sobre ZeciaK Store</h1>
+      <p>Moda playera, alma norteña y el amor por las cálidas aguas de Canoas de Punta Sal reunidos en una sola marca.</p>
+    </div>
+  </header>
+
+  <!-- Historia y Origen -->
+  <section class="story-section container">
+    <div class="story-grid">
+      <div class="story-content">
+        <span class="eyebrow">Nuestra Historia</span>
+        <h2>Nacidos Entre el Sol, la Arena y las Olas de Punta Sal</h2>
+        <p>
+          <strong>ZeciaK Store</strong> nació con un propósito claro: fusionar el estilo de vida playero más vibrante con la promoción activa del balneario turístico más acogedor del norte peruano: <strong>Canoas de Punta Sal (Tumbes)</strong>.
+        </p>
+        <p>
+          Inspirados por los majestuosos saltos de las ballenas jorobadas, la calidez de sus aguas que superan los 24°C durante todo el año y la rica tradición artesanal del litoral norteño, confeccionamos y seleccionamos prendas que no solo te hacen lucir espectacular, sino que te brindan la máxima comodidad y protección bajo el sol.
+        </p>
+        <div class="quote-box">
+          <i class="fa-solid fa-quote-left quote-icon"></i>
+          <p>"No vendemos solo ropa de playa; compartimos el espíritu libre, cálido y luminoso de Punta Sal con el mundo."</p>
+        </div>
+      </div>
+
+      <div class="story-media">
+        <div class="image-stack">
+          <img class="img-primary" src="assets/images/Gemini_Generated_Image_ (12).png" alt="ZeciaK Store en Punta Sal" (error)="onImageError($event)">
+          <div class="experience-card">
+            <span class="badge-number">100%</span>
+            <span class="badge-text">Pasión por Punta Sal y Moda Costera</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Misión y Visión -->
+  <section class="mv-section">
+    <div class="container mv-grid">
+      <div class="mv-card mission-card">
+        <div class="mv-icon"><i class="fa-solid fa-compass"></i></div>
+        <h3>Nuestra Misión</h3>
+        <p>
+          Brindar a viajeros, veraneantes y amantes del sol una experiencia de moda playera y equipamiento de alta calidad disponible 24/7, promoviendo al mismo tiempo los atractivos naturales, culturales y gastronómicos de Canoas de Punta Sal.
+        </p>
+      </div>
+
+      <div class="mv-card vision-card">
+        <div class="mv-icon"><i class="fa-solid fa-eye"></i></div>
+        <h3>Nuestra Visión</h3>
+        <p>
+          Ser la tienda referente del turismo y moda costera del norte peruano a nivel nacional e internacional, destacándonos por la innovación tecnológica, el compromiso ambiental con nuestros mares y la atención personalizada continua.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares y Valores -->
+  <section class="values-section container">
+    <div class="section-header text-center">
+      <span class="eyebrow">Lo Que Nos Guía</span>
+      <h2>Nuestros Valores Fundamentales</h2>
+      <p>Principios que definen cada prenda que diseñamos y cada cliente que atendemos.</p>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let val of values">
+        <div class="v-icon"><i [class]="val.icon"></i></div>
+        <h4>{{ val.title }}</h4>
+        <p>{{ val.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estadísticas de Impacto -->
+  <section class="stats-section">
+    <div class="container stats-grid">
+      <div class="stat-item" *ngFor="let stat of stats">
+        <span class="stat-num">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Llamado a la acción -->
+  <section class="cta-section container text-center">
+    <div class="cta-card">
+      <h2>¿Listo para vivir la experiencia Punta Sal?</h2>
+      <p>Equípate con lo mejor en trajes de baño, camisas de lino y accesorios antes de pisar la arena.</p>
+      <div class="cta-actions">
+        <a routerLink="/catalog" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-store"></i> Ver Catálogo
+        </a>
+        <a routerLink="/contacto" class="btn btn-accent btn-lg">
+          <i class="fa-solid fa-envelope"></i> Contáctanos 24/7
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

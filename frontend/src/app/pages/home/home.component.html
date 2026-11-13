@@ -1,0 +1,202 @@
+<!-- Banner de Disponibilidad 24/7 y Envíos Multiplataforma -->
+<div class="availability-bar">
+  <div class="container availability-inner">
+    <div class="status-badge">
+      <span class="pulsing-dot"></span>
+      <strong>Tienda Online 24/7 Activa</strong>
+    </div>
+    <div class="info-text">
+      <span>☀️ Canoas de Punta Sal (Tumbes) — Envíos a todo el Perú & Atención continua los 365 días</span>
+    </div>
+    <div class="quick-links">
+      <a routerLink="/contacto" class="badge-link"><i class="fa-solid fa-headset"></i> Soporte 24/7</a>
+    </div>
+  </div>
+</div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <span class="hero-pill animate-fade">🌴 Canoas de Punta Sal, Tumbes</span>
+    <h1 class="hero-title animate-title">Donde el Sol se Une con el Estilo</h1>
+    <p class="hero-subtitle animate-subtitle">
+      Descubre la colección de <strong>ZeciaK Store</strong>: moda playera premium, accesorios para surf y una guía exclusiva para vivir la magia de las playas más cálidas del norte peruano.
+    </p>
+    <div class="hero-buttons animate-buttons">
+      <a routerLink="/catalog" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-bag-shopping"></i> Explorar Catálogo
+      </a>
+      <a routerLink="/tourism" class="btn btn-accent btn-lg">
+        <i class="fa-solid fa-compass"></i> Guía Punta Sal
+      </a>
+      <a routerLink="/nosotros" class="btn btn-outline-light btn-lg">
+        <i class="fa-solid fa-circle-info"></i> Conócenos
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Categorías Principales (Damas, Caballeros, Niños, Accesorios) -->
+<section class="categories-section container">
+  <div class="section-header text-center">
+    <span class="eyebrow">Explora por Categoría</span>
+    <h2>Colecciones Diseñadas para el Paraíso</h2>
+    <p>Prendas frescas, con protección solar y confeccionadas para disfrutar el sol de Punta Sal.</p>
+  </div>
+
+  <div class="categories-grid">
+    <div class="category-card" *ngFor="let cat of categories">
+      <div class="cat-img-box">
+        <img [src]="cat.image" [alt]="cat.name" (error)="onImageError($event)">
+        <span class="cat-badge">{{ cat.count }}</span>
+      </div>
+      <div class="cat-info">
+        <h3>{{ cat.name }}</h3>
+        <p>{{ cat.tagline }}</p>
+        <a [routerLink]="['/catalog']" [queryParams]="{ category: cat.slug }" class="cat-btn">
+          Ver {{ cat.name }} <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Productos Destacados en Vivo -->
+<section class="featured-section container" *ngIf="featuredProducts$ | async as products">
+  <div class="section-header text-center">
+    <span class="eyebrow">Selección Especial</span>
+    <h2>Los Favoritos de la Temporada</h2>
+    <p>Prendas y accesorios más aclamados por nuestros visitantes en Canoas de Punta Sal.</p>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card" *ngFor="let product of products.slice(0, 4)">
+      <div class="product-media">
+        <img [src]="product.imageUrl" [alt]="product.name" (error)="onImageError($event)">
+        <span class="category-tag">{{ product.category }}</span>
+        <span class="featured-tag"><i class="fa-solid fa-star"></i> Destacado</span>
+      </div>
+      <div class="product-body">
+        <div class="rating-row">
+          <span class="stars">★★★★★</span>
+          <span class="score">{{ product.rating || '4.9' }}</span>
+        </div>
+        <h4>{{ product.name }}</h4>
+        <p class="desc">{{ product.description }}</p>
+        <div class="product-footer">
+          <div class="price-box">
+            <span class="currency">S/</span>
+            <span class="amount">{{ product.price | number:'1.2-2' }}</span>
+          </div>
+          <button 
+            class="btn btn-primary btn-sm"
+            [class.btn-success]="addedProductId === product.id"
+            (click)="addToCart(product)">
+            <i class="fa-solid" [ngClass]="addedProductId === product.id ? 'fa-check' : 'fa-cart-plus'"></i>
+            {{ addedProductId === product.id ? '¡Añadido!' : 'Añadir' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view-more-box text-center">
+    <a routerLink="/catalog" class="btn btn-outline btn-lg">
+      Ver Catálogo Completo (15+ Productos) <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+</section>
+
+<!-- Promoción Turística: Canoas de Punta Sal -->
+<section class="tourism-feature-section">
+  <div class="container tourism-feature-grid">
+    <div class="tourism-text">
+      <span class="eyebrow text-gold">Promoción Turística</span>
+      <h2>Descubre Canoas de Punta Sal: El Mejor Clima del Perú</h2>
+      <p>
+        Ubicado en el departamento de Tumbes, Canoas de Punta Sal te recibe con más de 300 días de sol al año, aguas turquesas que promedian los 24°C y una biodiversidad marina impresionante.
+      </p>
+      
+      <div class="tourism-perks">
+        <div class="perk-item">
+          <i class="fa-solid fa-water perk-icon"></i>
+          <div>
+            <strong>Aguas Cálidas Todo el Año</strong>
+            <span>La corriente de El Niño mantiene el mar templado y propicio para el baño familiar.</span>
+          </div>
+        </div>
+
+        <div class="perk-item">
+          <i class="fa-solid fa-fish perk-icon"></i>
+          <div>
+            <strong>Avistamiento de Ballenas Jorobadas</strong>
+            <span>De julio a octubre, presencia el ritual marino de apareamiento más majestuoso del litoral.</span>
+          </div>
+        </div>
+
+        <div class="perk-item">
+          <i class="fa-solid fa-utensils perk-icon"></i>
+          <div>
+            <strong>Gastronomía Marina Exclusiva</strong>
+            <span>Langostas, conchas negras y majarisco con pesca artesanal del día.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tourism-actions">
+        <a routerLink="/tourism" class="btn btn-accent btn-lg">
+          <i class="fa-solid fa-camera"></i> Ver Guía Turística Completa
+        </a>
+      </div>
+    </div>
+
+    <div class="tourism-visual">
+      <div class="image-wrapper">
+        <img src="assets/images/Gemini_Generated_Image_ (12).png" alt="Playa Punta Sal" (error)="onImageError($event)">
+        <div class="image-overlay-card">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>Canoas de Punta Sal</strong>
+            <p>Km 1187 Panamericana Norte • Tumbes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Beneficios ZeciaK Store: Disponibilidad 24/7 y Confiabilidad -->
+<section class="benefits-section container">
+  <div class="section-header text-center">
+    <span class="eyebrow">Compromiso ZeciaK</span>
+    <h2>Experiencia de Compra 24/7 Multiplataforma</h2>
+    <p>Diseñado para acompañarte en tu viaje o comprar desde la comodidad de tu hogar.</p>
+  </div>
+
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="b-icon"><i class="fa-solid fa-clock"></i></div>
+      <h3>Disponibilidad 24/7</h3>
+      <p>Nuestra plataforma web transaccional procesa tus pedidos y compras en cualquier momento, los 365 días del año.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="b-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3>Seguridad JWT</h3>
+      <p>Tus transacciones y credenciales están blindadas mediante autenticación moderna con tokens criptográficos.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="b-icon"><i class="fa-solid fa-truck-fast"></i></div>
+      <h3>Envíos Puntuales</h3>
+      <p>Entregas directas a tu domicilio en cualquier región del Perú o recojo express en tu hotel de Punta Sal.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="b-icon"><i class="fa-solid fa-leaf"></i></div>
+      <h3>Sostenibilidad Marina</h3>
+      <p>Apoyamos el cuidado de los ecosistemas marinos y fomentamos el trabajo artesanal local en Canoas.</p>
+    </div>
+  </div>
+</section>

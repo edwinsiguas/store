@@ -1,0 +1,473 @@
+.catalog-page {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+// Hero header
+.catalog-hero {
+  background: linear-gradient(135deg, #0a2540 0%, #006989 100%);
+  color: white;
+  padding: 60px 0 50px;
+  position: relative;
+
+  .subheading {
+    display: inline-block;
+    color: #fce38a;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    font-weight: 800;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #e0f2fe;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+}
+
+// Cart floating toast
+.cart-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0a2540;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  border-left: 5px solid #2ecc71;
+  animation: slideUp 0.3s ease-out;
+
+  i {
+    color: #2ecc71;
+    font-size: 1.2rem;
+  }
+
+  .toast-link {
+    background: #0081a7;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 8px;
+    &:hover {
+      background: #00afb9;
+    }
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.main-catalog-container {
+  margin-top: -30px;
+  position: relative;
+  z-index: 10;
+}
+
+// Control Bar: Category Filters & Tools
+.catalog-controls {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 16px;
+
+    .filter-pill {
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      padding: 9px 18px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+
+      i {
+        font-size: 0.9rem;
+        color: #64748b;
+      }
+
+      &:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+
+      &.active {
+        background: #0081a7;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 129, 167, 0.35);
+
+        i {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .filter-tools {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+      max-width: 480px;
+
+      i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 36px 10px 38px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+
+        &:focus {
+          border-color: #0081a7;
+          box-shadow: 0 0 0 3px rgba(0, 129, 167, 0.15);
+        }
+      }
+
+      .clear-search {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+    }
+
+    .sort-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      select {
+        padding: 9px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: #ffffff;
+        color: #1e293b;
+        outline: none;
+        cursor: pointer;
+
+        &:focus {
+          border-color: #0081a7;
+        }
+      }
+    }
+  }
+}
+
+// Results header
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 0 4px;
+
+  .results-count {
+    font-size: 0.95rem;
+    color: #475569;
+
+    .active-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-left: 4px;
+    }
+  }
+
+  .online-247-tag {
+    font-size: 0.85rem;
+    color: #16a34a;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+// Product Grid
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 26px;
+}
+
+.product-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid #f1f5f9;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-media {
+    position: relative;
+    height: 250px;
+    background: #f8fafc;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    .category-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(10, 37, 64, 0.85);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .stock-pill {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+
+      &.in-stock {
+        background: rgba(240, 253, 244, 0.95);
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+      }
+
+      &.low-stock {
+        background: rgba(254, 243, 199, 0.95);
+        color: #b45309;
+        border: 1px solid #fde68a;
+      }
+
+      &.out-of-stock {
+        background: rgba(254, 242, 242, 0.95);
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+      }
+    }
+  }
+
+  .product-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+
+      .stars {
+        color: #f59e0b;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+      }
+
+      .rating-num {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #64748b;
+      }
+    }
+
+    .product-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+
+    .product-desc {
+      color: #64748b;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      margin-bottom: 16px;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-price-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid #f1f5f9;
+
+      .price-data {
+        .symbol {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: #0a2540;
+          margin-right: 2px;
+        }
+        .val {
+          font-size: 1.35rem;
+          font-weight: 800;
+          color: #0081a7;
+        }
+      }
+
+      .btn-cart {
+        background: #0081a7;
+        color: #ffffff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+
+        &:hover:not(:disabled) {
+          background: #006989;
+          transform: scale(1.03);
+        }
+
+        &.added {
+          background: #2ecc71 !important;
+        }
+
+        &:disabled {
+          background: #cbd5e1;
+          color: #94a3b8;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+// States: Loading & Empty
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+
+  .empty-icon {
+    font-size: 3rem;
+    color: #94a3b8;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #0081a7;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
